@@ -1,4 +1,3 @@
-// Sample static data – can be replaced with dynamic data from your backend
 const archives = [
   {
     title: "Annual Food Safety Report",
@@ -34,16 +33,13 @@ const archives = [
   }
 ];
 
-// DOM Elements
 const archiveList = document.getElementById("archiveList");
 const searchInput = document.getElementById("searchInput");
 const categoryFilter = document.getElementById("categoryFilter");
 const yearFilter = document.getElementById("yearFilter");
 
-// Render archive entries
 function renderArchives(data) {
   archiveList.innerHTML = "";
-
   if (data.length === 0) {
     archiveList.innerHTML = `<p>No results found.</p>`;
     return;
@@ -66,7 +62,6 @@ function renderArchives(data) {
   });
 }
 
-// Filter logic
 function filterArchives() {
   const searchTerm = searchInput.value.toLowerCase();
   const selectedCategory = categoryFilter.value;
@@ -76,17 +71,14 @@ function filterArchives() {
     const matchesSearch = item.title.toLowerCase().includes(searchTerm);
     const matchesCategory = selectedCategory === "" || item.category === selectedCategory;
     const matchesYear = selectedYear === "" || item.year === selectedYear;
-
     return matchesSearch && matchesCategory && matchesYear;
   });
 
   renderArchives(filtered);
 }
 
-// Event listeners
 searchInput.addEventListener("input", filterArchives);
 categoryFilter.addEventListener("change", filterArchives);
 yearFilter.addEventListener("change", filterArchives);
 
-// Initial render
 renderArchives(archives);
