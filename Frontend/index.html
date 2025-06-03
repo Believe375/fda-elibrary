@@ -12,7 +12,7 @@
 <body>
   <header>
     <div class="header-left">
-      <img src="assests/fda-logo.png" alt="FDA Logo" class="logo-img" />
+      <img src="assets/fda-logo.png" alt="FDA Logo" class="logo-img" />
     </div>
     <div class="header-center">
       <h1>FOOD AND DRUGS AUTHORITY</h1>
@@ -22,7 +22,7 @@
       <ul>
         <li><a href="#">Home</a></li>
         <li><a href="#">About</a></li>
-        <li><a href="#">Admin Login</a></li>
+        <li><a href="/admin/">Admin </a></li>
       </ul>
     </nav>
   </header>
@@ -38,12 +38,12 @@
         <option value="Public Health">Public Health</option>
         <option value="Medical Devices">Medical Devices</option>
         <option value="Drug Development">Drug Development</option>
-        <option value="FDA Regulations">Industry Guidelines</option>
+        <option value="FDA Regulations">FDA Regulations</option>
         <option value="Research & Reports">Research & Reports</option>
         <option value="Consumer Education">Consumer Education</option>
-        <option value="Food Safety">Food And Drugs Law</option>
-        <option value="Compliance & Policy">Compliance & Policies</option>
-        <option value="xTobacco $ Substances Abuse">Tobacco & Substances Abuse</option>
+        <option value="Food Safety">Food Safety</option>
+        <option value="Compliance & Policy">Compliance & Policy</option>
+        <option value="Tobacco & Substances Abuse">Tobacco & Substances Abuse</option>
         <option value="Cosmetic & Household Medicals">Cosmetic & Household Medicals</option>
       </select>
       <select id="yearFilter">
@@ -57,26 +57,14 @@
       </select>
     </section>
 
-    <section class="archive-list" id="archiveList">
-      <!-- Dynamic entries here -->
-      <div class="archive-card">
-        <div class="info">
-          <h3>Annual Food Safety Report</h3>
-          <p class="meta">Category: Reports | Date: May 2025</p>
-        </div>
-        <div class="actions">
-          <a href="#" class="btn view">View</a>
-          <a href="#" class="btn download">Download</a>
-        </div>
-      </div>
-    </section>
+    <section class="archive-list" id="archiveList"></section>
   </main>
 
   <footer>
     <p>&copy; 2025 Food and Drugs Authority | All rights reserved.</p>
   </footer>
 
-  <!-- Netlify CMS -->
-<script src="https://unpkg.com/netlify-cms@^2.0.0/dist/netlify-cms.js"></script>
+  <script src="script.js"></script>
+  <script src="https://unpkg.com/netlify-cms@^2.0.0/dist/netlify-cms.js"></script>
 </body>
 </html>
