@@ -1,0 +1,49 @@
+<!-- Frontend/admin.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Dashboard - FDA E-Library</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+</head>
+<body>
+  <header class="admin-header">
+    <div class="logo-title">
+      <img src="img/fda-logo.png" alt="FDA Logo" class="logo" />
+      <div>
+        <h1>FDA E-Library Admin</h1>
+        <p>Dashboard</p>
+      </div>
+    </div>
+    <nav>
+      <a href="index.html">Back to Library</a>
+      <button onclick="handleLogout()">Logout</button>
+    </nav>
+  </header>
+
+  <main class="admin-main">
+    <section class="upload-section">
+      <h2>Upload a New Book</h2>
+      <form id="uploadForm">
+        <input type="text" id="title" placeholder="Book Title" required />
+        <input type="text" id="author" placeholder="Author" required />
+        <select id="category" required>
+          <option value="">Select Category</option>
+          <!-- dynamically populated -->
+        </select>
+        <input type="file" id="bookFile" accept=".pdf" required />
+        <button type="submit">Upload Book</button>
+      </form>
+    </section>
+
+    <section class="book-list-section">
+      <h2>Uploaded Books</h2>
+      <div id="bookList"></div>
+    </section>
+  </main>
+
+  <script src="admin.js"></script>
+</body>
+</html>

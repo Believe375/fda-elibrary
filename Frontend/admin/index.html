@@ -3,23 +3,73 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>FDA Admin Login</title>
-  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+  <title>FDA Admin Dashboard</title>
+  <link rel="stylesheet" href="../style.css" />
+  <link rel="stylesheet" href="admin.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
 </head>
 <body>
-  <h2>Logging you in...</h2>
-  <script>
-    netlifyIdentity.on("init", (user) => {
-      if (!user) {
-        netlifyIdentity.open("login");
-      }
-    });
+  <header>
+    <div class="header-left">
+      <a href="/">
+        <img src="../assets/fda-logo.png" alt="FDA Logo" class="logo-img" />
+      </a>
+    </div>
+    <div class="header-center">
+      <h1>Admin Dashboard</h1>
+      <p class="subtitle">FDA E-Library Management</p>
+    </div>
+    <nav class="header-right">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="#" onclick="logout()">Logout</a></li>
+      </ul>
+    </nav>
+  </header>
 
-    netlifyIdentity.on("login", () => {
-      document.location.href = "/admin/";
-    });
+  <main class="container">
+    <section class="stats">
+      <h2>Dashboard Overview</h2>
+      <div class="stats-grid">
+        <div class="stat-card"><h3 id="totalBooks">0</h3><p>Total Books</p></div>
+        <div class="stat-card"><h3 id="totalCategories">0</h3><p>Categories</p></div>
+      </div>
+    </section>
 
-    netlifyIdentity.init();
-  </script>
+    <section class="upload-section">
+      <h2>Upload New Book</h2>
+      <form id="uploadForm">
+        <input type="text" id="title" placeholder="Title" required />
+        <input type="text" id="author" placeholder="Author" required />
+        <input type="number" id="year" placeholder="Year" required />
+        <select id="category" required>
+          <option value="">Select Category</option>
+          <option value="Regulatory">Regulatory</option>
+          <option value="Publications">Publications</option>
+          <option value="Newsletters">Newsletters</option>
+          <option value="Research">Research</option>
+          <option value="Drug Safety">Drug Safety</option>
+          <option value="Food Safety">Food Safety</option>
+          <option value="Cosmetics">Cosmetics</option>
+          <option value="Medical Devices">Medical Devices</option>
+        </select>
+        <input type="file" id="file" accept="application/pdf" required />
+        <button type="submit">Upload</button>
+      </form>
+      <p id="uploadStatus"></p>
+    </section>
+
+    <section class="admin-books">
+      <h2>Uploaded Books</h2>
+      <div id="adminBookList" class="archive-list"></div>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 Food and Drugs Authority | Admin Dashboard</p>
+  </footer>
+
+  <script src="../script.js"></script>
+  <script src="admin.js"></script>
 </body>
 </html>
