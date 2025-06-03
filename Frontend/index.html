@@ -20,9 +20,9 @@
     </div>
     <nav class="header-right">
       <ul>
-        <li><a href="Home">Home</a></li>
-        <li><a href="About">About</a></li>
-        <li><a href="/admin/">Admin </a></li>
+        <li><a href="/">Home</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="/admin/">Admin</a></li>
       </ul>
     </nav>
   </header>
@@ -31,6 +31,7 @@
     <section class="controls">
       <input type="text" id="searchInput" placeholder="Search by title..." />
       <select id="categoryFilter">
+        <option value="">All Categories</option>
         <option value="Admin">Admin</option>
         <option value="Finance">Finance</option>
         <option value="Laboratory">Laboratory</option>
@@ -63,7 +64,22 @@
     <p>&copy; 2025 Food and Drugs Authority | All rights reserved.</p>
   </footer>
 
+  <!-- Main script -->
   <script src="script.js"></script>
+
+  <!-- Netlify CMS -->
+  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+  <script>
+    if (window.netlifyIdentity) {
+      window.netlifyIdentity.on("init", (user) => {
+        if (!user) {
+          window.netlifyIdentity.on("login", () => {
+            document.location.href = "/admin/";
+          });
+        }
+      });
+    }
+  </script>
   <script src="https://unpkg.com/netlify-cms@^2.0.0/dist/netlify-cms.js"></script>
 </body>
 </html>
