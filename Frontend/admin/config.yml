@@ -1,0 +1,21 @@
+backend:
+  name: git-gateway
+  branch: main
+
+media_folder: "uploads"
+public_folder: "/uploads"
+
+site_url: https://your-site-name.netlify.app
+logo_url: /path/to/your/logo.png
+
+collections:
+  - name: "books"
+    label: "Books"
+    folder: "content/books"
+    create: true
+    slug: "{{year}}-{{slug}}"
+    fields:
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Category", name: "category", widget: "select", options: ["Admin", "Finance", "Laboratory", "Public Health", "Medical Devices", "Drug Development", "FDA Regulations", "Research & Reports", "Consumer Education", "Food Safety", "Compliance & Policy", "xTobacco $ Substances Abuse", "Cosmetic & Household Medicals"] }
+      - { label: "File", name: "file", widget: "file" }
+      - { label: "Date", name: "date", widget: "datetime" }
