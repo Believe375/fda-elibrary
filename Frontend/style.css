@@ -26,8 +26,8 @@ header {
   flex: 1;
 }
 .logo-img {
-  height: 80px;
-  width: 80px;
+  height: 100px;
+  width: 100px;
   object-fit: contain;
 }
 
@@ -37,12 +37,11 @@ header {
   color: white;
 }
 .header-center h1 {
-  font-size: 1.6rem;
+  font-size: 2rem;
   font-weight: 700;
 }
 .subtitle {
-  font-size: 1rem;
-  font-weight: 400;
+  font-size: 1.1rem;
   margin-top: 0.25rem;
 }
 
@@ -60,7 +59,7 @@ header {
   color: #fff;
   text-decoration: none;
   font-weight: 500;
-  font-size: 0.95rem;
+  font-size: 1rem;
 }
 .header-right a:hover {
   text-decoration: underline;
