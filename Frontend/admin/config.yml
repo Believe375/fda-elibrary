@@ -1,6 +1,6 @@
 backend:
   name: git-gateway
-  branch: master  # You mentioned you're using 'master' not 'main'
+  branch: master  
 
 media_folder: "uploads"        # Folder inside the repo for storing uploaded files
 public_folder: "/uploads"      # Public URL path
