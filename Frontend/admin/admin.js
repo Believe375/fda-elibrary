@@ -1,94 +1,89 @@
+// FDA Admin Dashboard Scripts
+
 document.addEventListener('DOMContentLoaded', () => {
-  const dashboardStats = {
-    totalBooks: document.getElementById('totalBooks'),
-    categories: document.getElementById('totalCategories'),
-    users: document.getElementById('totalUsers')
-  };
-
-  const bookTableBody = document.getElementById('bookTableBody');
-
-  // Check Netlify Identity for admin
-  const user = netlifyIdentity.currentUser();
-  if (!user || !user.app_metadata || user.app_metadata.role !== 'admin') {
-    alert('Access denied. Admins only.');
-    window.location.href = '/';
+  const token = localStorage.getItem('token');
+  if (!token) {
+    alert('You must be logged in as an admin to access this page.');
+    window.location.href = '../index.html';
     return;
   }
 
-  // Fetch all books from backend
-  async function fetchBooks() {
-    try {
-      const res = await fetch('/api/books');
-      const books = await res.json();
-      renderBookTable(books);
-      updateStats(books);
-    } catch (err) {
-      console.error('Error loading books:', err);
-    }
-  }
-
-  // Render books in the table
-  function renderBookTable(books) {
-    bookTableBody.innerHTML = '';
-
-    books.forEach((book, index) => {
-      const row = document.createElement('tr');
-
-      row.innerHTML = `
-        <td>${index + 1}</td>
-        <td>${book.title}</td>
-        <td>${book.author || 'N/A'}</td>
-        <td>${book.category}</td>
-        <td>${book.year}</td>
-        <td>
-          <a href="${book.fileUrl}" target="_blank">View</a> |
-          <button class="delete-btn" data-id="${book._id}">Delete</button>
-        </td>
-      `;
-
-      bookTableBody.appendChild(row);
-    });
-
-    // Attach delete events
-    document.querySelectorAll('.delete-btn').forEach(btn => {
-      btn.addEventListener('click', async (e) => {
-        const id = e.target.dataset.id;
-        if (confirm('Are you sure you want to delete this book?')) {
-          await deleteBook(id);
-        }
-      });
-    });
-  }
-
-  // Update dashboard stats
-  function updateStats(books) {
-    dashboardStats.totalBooks.textContent = books.length;
-    const uniqueCategories = [...new Set(books.map(book => book.category))];
-    dashboardStats.categories.textContent = uniqueCategories.length;
-    dashboardStats.users.textContent = 'Admin Only';
-  }
-
-  // Delete book
-  async function deleteBook(id) {
-    try {
-      const token = await netlifyIdentity.currentUser().jwt();
-      const res = await fetch(`/api/books/${id}`, {
-        method: 'DELETE',
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      });
-
-      if (res.ok) {
-        fetchBooks();
-      } else {
-        alert('Failed to delete book.');
-      }
-    } catch (err) {
-      console.error('Delete error:', err);
-    }
-  }
-
-  // Initial load
   fetchBooks();
+  fetchStats();
+
+  document.getElementById('uploadForm').addEventListener('submit', handleUpload);
 });
+
+function fetchBooks() {
+  fetch('/api/books')
+    .then(res => res.json())
+    .then(data => {
+      const list = document.getElementById('adminBookList');
+      list.innerHTML = '';
+      data.forEach(book => {
+        const item = document.createElement('div');
+        item.className = 'archive-item';
+        item.innerHTML = `
+          <span>${book.title} (${book.year}) - ${book.category}</span>
+          <button onclick="deleteBook('${book._id}')">Delete</button>
+        `;
+        list.appendChild(item);
+      });
+    })
+    .catch(err => console.error('Fetch books error:', err));
+}
+
+function fetchStats() {
+  fetch('/api/books')
+    .then(res => res.json())
+    .then(data => {
+      const totalBooks = data.length;
+      const categories = [...new Set(data.map(b => b.category))];
+      document.getElementById('totalBooks').textContent = totalBooks;
+      document.getElementById('totalCategories').textContent = categories.length;
+    });
+}
+
+function handleUpload(e) {
+  e.preventDefault();
+  const form = document.getElementById('uploadForm');
+  const formData = new FormData();
+  formData.append('title', form.title.value);
+  formData.append('author', form.author.value);
+  formData.append('year', form.year.value);
+  formData.append('category', form.category.value);
+  formData.append('file', form.file.files[0]);
+
+  fetch('/api/books', {
+    method: 'POST',
+    headers: { Authorization: 'Bearer ' + localStorage.getItem('token') },
+    body: formData
+  })
+    .then(res => res.json())
+    .then(data => {
+      document.getElementById('uploadStatus').textContent = 'Upload successful!';
+      form.reset();
+      fetchBooks();
+    })
+    .catch(err => {
+      document.getElementById('uploadStatus').textContent = 'Upload failed.';
+      console.error(err);
+    });
+}
+
+function deleteBook(id) {
+  if (!confirm('Are you sure you want to delete this book?')) return;
+
+  fetch(`/api/books/${id}`, {
+    method: 'DELETE',
+    headers: { Authorization: 'Bearer ' + localStorage.getItem('token') }
+  })
+    .then(res => res.json())
+    .then(() => fetchBooks())
+    .catch(err => console.error(err));
+}
+
+function logout() {
+  localStorage.removeItem('token');
+  window.location.href = '../index.html';
+}
