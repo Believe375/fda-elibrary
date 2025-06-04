@@ -1,0 +1,172 @@
+/* Admin Dashboard Custom Styles */
+body {
+  font-family: 'Inter', sans-serif;
+  margin: 0;
+  background-color: #f4f6f8;
+  color: #222;
+}
+
+header {
+  background-color: #004080;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  padding: 15px 20px;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.header-left img.logo-img {
+  height: 60px;
+  width: auto;
+}
+
+.header-center {
+  text-align: center;
+  flex: 1;
+}
+
+.header-center h1 {
+  margin: 0;
+  font-size: 1.8em;
+  font-weight: 700;
+}
+
+.subtitle {
+  font-size: 0.9em;
+  color: #ffe600;
+  font-weight: 600;
+}
+
+.header-right ul {
+  list-style: none;
+  display: flex;
+  gap: 15px;
+  margin: 0;
+  padding: 0;
+}
+
+.header-right ul li a {
+  color: #fff;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.container {
+  padding: 20px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.stats {
+  margin-bottom: 30px;
+}
+
+.stats-grid {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.stat-card {
+  background: #fff;
+  padding: 20px;
+  flex: 1;
+  border-left: 5px solid #004080;
+  border-radius: 6px;
+  box-shadow: 0 0 6px rgba(0,0,0,0.1);
+}
+
+.stat-card h3 {
+  margin: 0;
+  font-size: 2.2em;
+  color: #004080;
+}
+
+.upload-section {
+  background-color: #fff;
+  padding: 20px;
+  margin-bottom: 30px;
+  border-radius: 6px;
+  box-shadow: 0 0 6px rgba(0,0,0,0.05);
+}
+
+.upload-section h2 {
+  margin-top: 0;
+}
+
+.upload-section form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.upload-section input,
+.upload-section select,
+.upload-section button {
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-family: 'Inter', sans-serif;
+}
+
+.upload-section button {
+  background-color: #004080;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.3s ease;
+}
+
+.upload-section button:hover {
+  background-color: #003060;
+}
+
+#uploadStatus {
+  margin-top: 10px;
+  font-weight: 600;
+  color: green;
+}
+
+.admin-books h2 {
+  margin-bottom: 15px;
+}
+
+.archive-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.archive-item {
+  background: #fff;
+  padding: 15px;
+  border-left: 5px solid #222;
+  border-radius: 4px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.archive-item span {
+  font-weight: 500;
+}
+
+.archive-item button {
+  background-color: #c62828;
+  color: #fff;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+footer {
+  background-color: #004080;
+  color: #fff;
+  padding: 15px;
+  text-align: center;
+  margin-top: 30px;
+}
