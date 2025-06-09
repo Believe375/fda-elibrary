@@ -1,89 +1,73 @@
-// FDA Admin Dashboard Scripts
-
 document.addEventListener('DOMContentLoaded', () => {
-  const token = localStorage.getItem('token');
-  if (!token) {
-    alert('You must be logged in as an admin to access this page.');
-    window.location.href = '../index.html';
-    return;
+  const uploadForm = document.getElementById('uploadForm');
+  const booksList = document.getElementById('booksList');
+  const uploadMessage = document.getElementById('uploadMessage');
+
+  const token = localStorage.getItem('token'); // Must be set at login
+
+  async function loadBooks() {
+    try {
+      const res = await fetch('/api/books');
+      const data = await res.json();
+      renderBooks(data.books || data);
+    } catch {
+      booksList.innerHTML = '<p>Error loading books.</p>';
+    }
   }
 
-  fetchBooks();
-  fetchStats();
+  function renderBooks(books) {
+    booksList.innerHTML = '';
+    books.forEach(book => {
+      const div = document.createElement('div');
+      div.className = 'book-item';
+      div.innerHTML = `
+        <span><strong>${book.title}</strong> by ${book.author} [${book.category}]</span>
+        <a href="${book.fileUrl}" target="_blank">Download</a>
+        <button data-id="${book._id}">Delete</button>
+      `;
+      div.querySelector('button').addEventListener('click', () => deleteBook(book._id));
+      booksList.appendChild(div);
+    });
+  }
 
-  document.getElementById('uploadForm').addEventListener('submit', handleUpload);
-});
+  uploadForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const formData = new FormData(uploadForm);
 
-function fetchBooks() {
-  fetch('/api/books')
-    .then(res => res.json())
-    .then(data => {
-      const list = document.getElementById('adminBookList');
-      list.innerHTML = '';
-      data.forEach(book => {
-        const item = document.createElement('div');
-        item.className = 'archive-item';
-        item.innerHTML = `
-          <span>${book.title} (${book.year}) - ${book.category}</span>
-          <button onclick="deleteBook('${book._id}')">Delete</button>
-        `;
-        list.appendChild(item);
+    try {
+      const res = await fetch('/api/books/upload', {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`
+        },
+        body: formData
       });
-    })
-    .catch(err => console.error('Fetch books error:', err));
-}
 
-function fetchStats() {
-  fetch('/api/books')
-    .then(res => res.json())
-    .then(data => {
-      const totalBooks = data.length;
-      const categories = [...new Set(data.map(b => b.category))];
-      document.getElementById('totalBooks').textContent = totalBooks;
-      document.getElementById('totalCategories').textContent = categories.length;
-    });
-}
+      const result = await res.json();
+      uploadMessage.textContent = result.message || 'Upload successful!';
+      uploadForm.reset();
+      loadBooks();
+    } catch (err) {
+      uploadMessage.textContent = 'Upload failed.';
+    }
+  });
 
-function handleUpload(e) {
-  e.preventDefault();
-  const form = document.getElementById('uploadForm');
-  const formData = new FormData();
-  formData.append('title', form.title.value);
-  formData.append('author', form.author.value);
-  formData.append('year', form.year.value);
-  formData.append('category', form.category.value);
-  formData.append('file', form.file.files[0]);
+  async function deleteBook(bookId) {
+    if (!confirm('Delete this book?')) return;
+    try {
+      const res = await fetch(`/api/books/${bookId}`, {
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      const result = await res.json();
+      alert(result.message || 'Deleted.');
+      loadBooks();
+    } catch (err) {
+      alert('Failed to delete.');
+    }
+  }
 
-  fetch('/api/books', {
-    method: 'POST',
-    headers: { Authorization: 'Bearer ' + localStorage.getItem('token') },
-    body: formData
-  })
-    .then(res => res.json())
-    .then(data => {
-      document.getElementById('uploadStatus').textContent = 'Upload successful!';
-      form.reset();
-      fetchBooks();
-    })
-    .catch(err => {
-      document.getElementById('uploadStatus').textContent = 'Upload failed.';
-      console.error(err);
-    });
-}
-
-function deleteBook(id) {
-  if (!confirm('Are you sure you want to delete this book?')) return;
-
-  fetch(`/api/books/${id}`, {
-    method: 'DELETE',
-    headers: { Authorization: 'Bearer ' + localStorage.getItem('token') }
-  })
-    .then(res => res.json())
-    .then(() => fetchBooks())
-    .catch(err => console.error(err));
-}
-
-function logout() {
-  localStorage.removeItem('token');
-  window.location.href = '../index.html';
-}
+  loadBooks();
+});

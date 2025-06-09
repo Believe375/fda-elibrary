@@ -1,33 +1,33 @@
 const express = require('express');
 const router = express.Router();
 const bookController = require('../controllers/bookController');
-const { verifyToken, isAdmin } = require('../middleware/authMiddleware');
+const { verifyToken, verifyAdmin } = require('../middleware/authMiddleware');
 const multer = require('multer');
+const path = require('path');
 
-// Multer setup for file uploads
+// Multer setup
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     if (file.fieldname === 'image') cb(null, 'uploads/images');
     else if (file.fieldname === 'file') cb(null, 'uploads/files');
+    else cb(null, 'uploads/others');
   },
   filename: (req, file, cb) => {
-    const uniqueName = Date.now() + '-' + file.originalname;
-    cb(null, uniqueName);
+    cb(null, Date.now() + '-' + file.originalname);
   }
 });
-
 const upload = multer({ storage });
 
-// Routes
-router.get('/', bookController.getAllBooks);
+// PUBLIC ROUTES
+router.get('/', bookController.getBooks);
 router.get('/categories', bookController.getCategories);
-router.get('/user', verifyToken, bookController.getBooksByUser);
-router.post('/', verifyToken, upload.fields([
+
+// PROTECTED ROUTES
+router.get('/user', verifyToken, bookController.getUserBooks);
+router.post('/upload', verifyToken, verifyAdmin, upload.fields([
   { name: 'image', maxCount: 1 },
   { name: 'file', maxCount: 1 }
 ]), bookController.uploadBook);
-
-// Admin-only delete
-router.delete('/:id', verifyToken, isAdmin, bookController.deleteBook);
+router.delete('/:id', verifyToken, verifyAdmin, bookController.deleteBook);
 
 module.exports = router;

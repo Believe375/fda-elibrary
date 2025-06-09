@@ -1,6 +1,7 @@
 const User = require('../models/User');
 const jwt = require('jsonwebtoken');
 
+// Helper: generate JWT
 const generateToken = (user) => {
   return jwt.sign(
     { id: user._id, email: user.email, isAdmin: user.isAdmin },
@@ -9,16 +10,17 @@ const generateToken = (user) => {
   );
 };
 
-// Register a new user
+// Register
 exports.register = async (req, res) => {
   try {
-    const { username, email, password } = req.body;
+    const { name, email, password } = req.body;
 
     const existingUser = await User.findOne({ email });
-    if (existingUser)
+    if (existingUser) {
       return res.status(400).json({ message: 'Email already in use.' });
+    }
 
-    const user = new User({ username, email, password });
+    const user = new User({ name, email, password });
     await user.save();
 
     const token = generateToken(user);
@@ -27,24 +29,25 @@ exports.register = async (req, res) => {
       token,
       user: {
         id: user._id,
-        username: user.username,
+        name: user.name,
         email: user.email,
-        isAdmin: user.isAdmin
-      }
+        isAdmin: user.isAdmin,
+      },
     });
   } catch (error) {
     res.status(500).json({ message: 'Error during registration', error });
   }
 };
 
-// Login user
+// Login
 exports.login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
     const user = await User.findOne({ email });
-    if (!user || !(await user.comparePassword(password)))
+    if (!user || !(await user.comparePassword(password))) {
       return res.status(400).json({ message: 'Invalid email or password' });
+    }
 
     const token = generateToken(user);
     res.status(200).json({
@@ -52,12 +55,22 @@ exports.login = async (req, res) => {
       token,
       user: {
         id: user._id,
-        username: user.username,
+        name: user.name,
         email: user.email,
-        isAdmin: user.isAdmin
-      }
+        isAdmin: user.isAdmin,
+      },
     });
   } catch (error) {
     res.status(500).json({ message: 'Error during login', error });
+  }
+};
+
+//  Admin: get all users
+exports.getAllUsers = async (req, res) => {
+  try {
+    const users = await User.find().select('-password');
+    res.status(200).json(users);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching users', error });
   }
 };

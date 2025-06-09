@@ -5,17 +5,13 @@ const dotenv = require('dotenv');
 const helmet = require('helmet');
 const morgan = require('morgan');
 const path = require('path');
+const fs = require('fs');
+const routes = require('./routes'); // Use bundled routes/index.js
 
-// Route imports
-const authRoutes = require('./routes/authRoutes');
-const bookRoutes = require('./routes/bookRoutes');
-const categoryRoutes = require('./routes/categoryRoutes');
-const userRoutes = require('./routes/userRoutes');
-
-// Load environment variables
 dotenv.config();
 
 const app = express();
+const PORT = process.env.PORT || 5500;
 
 // Middleware
 app.use(cors());
@@ -26,34 +22,35 @@ app.use(morgan('dev'));
 // Serve uploaded files
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-// Serve frontend static files
-app.use(express.static(path.join(__dirname, 'client')));
+// Serve static frontend files
+app.use(express.static(path.join(__dirname, 'frontend')));
 
-// API Routes
-app.use('/api/auth', authRoutes);
-app.use('/api/books', bookRoutes);
-app.use('/api/categories', categoryRoutes);
-app.use('/api/users', userRoutes);
+//  Use all routes from /routes/index.js
+app.use('/api', routes);
 
-// Serve frontend on all unmatched routes (for SPA routing)
+// SPA Fallback for frontend routes
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'client', 'index.html'));
+  const requestedPath = path.join(__dirname, 'frontend', req.path);
+  if (fs.existsSync(requestedPath) && requestedPath.endsWith('.html')) {
+    res.sendFile(requestedPath);
+  } else {
+    res.sendFile(path.join(__dirname, 'frontend', 'index.html'));
+  }
 });
 
-// MongoDB connection and server start
-const PORT = process.env.PORT || 5500;
+// Start Server
 mongoose
   .connect(process.env.MONGO_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true
   })
   .then(() => {
-    console.log(' MongoDB connected');
+    console.log('MongoDB connected');
     app.listen(PORT, () => {
-      console.log( `Server running at http://localhost:${PORT}`);
+      console.log(`Server running at http://localhost:${PORT}`);
     });
   })
   .catch((err) => {
-    console.error(' MongoDB connection error:', err.message);
+    console.error('MongoDB connection error:', err.message);
     process.exit(1);
   });

@@ -3,75 +3,44 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>FDA Admin Dashboard</title>
-
-  <!-- CORRECTED: Paths are relative to /Frontend/ root -->
-  <link rel="stylesheet" href="/style.css" />
-  <link rel="stylesheet" href="/admin/admin.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+  <title>FDA E-Library Admin</title>
+  <link rel="stylesheet" href="admin.css" />
 </head>
 <body>
-  <header>
-    <div class="header-left">
-      <a href="/index.html">
-        <img src="/assets/fda-logo.png" alt="FDA Logo" class="logo-img" />
-      </a>
+  <header class="admin-header">
+    <img src="assets/fda-logo.png" alt="FDA Logo" class="admin-logo" />
+    <div class="admin-title">
+      <h1>FOOD AND DRUGS AUTHORITY</h1>
+      <p>E-library Admin Dashboard</p>
     </div>
-    <div class="header-center">
-      <h1>Admin Dashboard</h1>
-      <p class="subtitle">FDA E-Library Management</p>
-    </div>
-    <nav class="header-right">
-      <ul>
-        <li><a href="/index.html">Home</a></li>
-        <li><a href="#" onclick="logout()">Logout</a></li>
-      </ul>
-    </nav>
   </header>
 
-  <main class="container">
-    <section class="stats">
-      <h2>Dashboard Overview</h2>
-      <div class="stats-grid">
-        <div class="stat-card"><h3 id="totalBooks">0</h3><p>Total Books</p></div>
-        <div class="stat-card"><h3 id="totalCategories">0</h3><p>Categories</p></div>
-      </div>
-    </section>
-
-    <section class="upload-section">
+  <main class="admin-main">
+    <section class="admin-form-section">
       <h2>Upload New Book</h2>
-      <form id="uploadForm">
-        <input type="text" id="title" placeholder="Title" required />
-        <input type="text" id="author" placeholder="Author" required />
-        <input type="number" id="year" placeholder="Year" required />
-        <select id="category" required>
+      <form id="uploadForm" enctype="multipart/form-data">
+        <input type="text" name="title" placeholder="Book Title" required />
+        <input type="text" name="author" placeholder="Author" required />
+        <select name="category" required>
           <option value="">Select Category</option>
-          <option value="Regulatory">Regulatory</option>
-          <option value="Publications">Publications</option>
-          <option value="Newsletters">Newsletters</option>
           <option value="Research">Research</option>
-          <option value="Drug Safety">Drug Safety</option>
-          <option value="Food Safety">Food Safety</option>
-          <option value="Cosmetics">Cosmetics</option>
-          <option value="Medical Devices">Medical Devices</option>
+          <option value="Policy">Policy</option>
+          <option value="Reports">Reports</option>
+          <option value="Publications">Publications</option>
+          <option value="Regulations">Regulations</option>
         </select>
-        <input type="file" id="file" accept="application/pdf" required />
-        <button type="submit">Upload Book</button>
+        <input type="file" name="pdf" accept=".pdf" required />
+        <button type="submit">Upload</button>
       </form>
-      <p id="uploadStatus"></p>
+      <p id="uploadMessage"></p>
     </section>
 
-    <section class="admin-books">
-      <h2>Manage Uploaded Books</h2>
-      <div id="adminBookList" class="archive-list"></div>
+    <section class="admin-books-section">
+      <h2>Uploaded Books</h2>
+      <div id="booksList"></div>
     </section>
   </main>
 
-  <footer>
-    <p>&copy; 2025 Food and Drugs Authority | Admin Dashboard</p>
-  </footer>
-
-  <script src="/script.js"></script>
-  <script src="/admin/admin.js"></script>
+  <script src="admin.js"></script>
 </body>
 </html>
